@@ -60,7 +60,7 @@ public class CarControllerTest {
                 .extract().path("accessToken");
 
         specification = new RequestSpecBuilder()
-                .addHeader(SecurityConstants.HEADER_STRING, token)
+                .addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token)
                 .setBasePath("api/cars")
                 .build();
     }

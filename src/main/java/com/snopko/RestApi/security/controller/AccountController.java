@@ -29,7 +29,7 @@ public class AccountController {
     private JwtUtils jwtUtils;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
+    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtUtils.generateToken(authentication);
@@ -37,7 +37,7 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserDto user) throws Exception {
+    public ResponseEntity<String> register(@RequestBody UserDto user) {
         if (userService.existsByUsername(user.getUsername())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
