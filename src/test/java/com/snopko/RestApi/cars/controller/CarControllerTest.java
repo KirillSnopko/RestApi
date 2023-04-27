@@ -1,17 +1,16 @@
 package com.snopko.RestApi.cars.controller;
 
 import com.snopko.RestApi.cars.logic.dto.CarDto;
+import com.snopko.RestApi.security.config.SecurityConstants;
 import com.snopko.RestApi.security.logic.dto.LoginDto;
+import com.snopko.RestApi.security.logic.dto.UserDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
-import io.restassured.http.Cookies;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
-import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -29,31 +28,40 @@ public class CarControllerTest {
     private final String host = "http://localhost";
     private CarDto testCarDto = new CarDto("11111111er11", "Mazda", "CX5", "Sedan", "manual", "petrol", new Date(2008, 10, 10), new Date(2023, 10, 10), new Date(2023, 10, 10));
     private long id;
+    private final UserDto userDto = new UserDto("username", "password");
     private RequestSpecification specification;
 
-    @BeforeEach
-    public void configureRestAssured() {
+    @BeforeAll
+    public void init() {
         RestAssured.baseURI = host;
         RestAssured.port = port;
 
-        LoginDto loginDto = new LoginDto("username", "password");
-        String token = RestAssured.given()
-                .basePath("/api/auth/authenticate")
+        RestAssured.with()
+                .body(userDto)
                 .contentType(ContentType.JSON)
-                .body(loginDto)
                 .when()
-                .post()
+                .post("api/auth/register")
+                .then()
+                .log()
+                .all()
+                .assertThat()
+                .statusCode(201);
+
+        LoginDto login = new LoginDto("username", "password");
+        String token = RestAssured.with()
+                .body(login)
+                .contentType(ContentType.JSON)
+                .when()
+                .post("api/auth/authenticate")
                 .then()
                 .log()
                 .all()
                 .statusCode(200)
-                .cookie("jwt").toString();
-        //.extract()
-        // .header("");
+                .extract().path("accessToken");
 
-        System.err.println(token);
         specification = new RequestSpecBuilder()
-                .addCookie("jwt", token)
+                .addHeader(SecurityConstants.HEADER_STRING, token)
+                .setBasePath("api/cars")
                 .build();
     }
 
@@ -62,11 +70,11 @@ public class CarControllerTest {
     @RepeatedTest(5)
     @DisplayName("Create new car")
     public void create_car() {
-        ValidatableResponse vr = RestAssured.with()
+        ValidatableResponse vr = specification.with()
                 .body(testCarDto)
                 .contentType(ContentType.JSON)
                 .when()
-                .post("api/cars")
+                .post()
                 .then()
                 .log()
                 .all()
@@ -190,7 +198,20 @@ public class CarControllerTest {
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .when()
-                .delete("api/cars/all")
+                .delete("api/auth/")
+                .then()
+                .log()
+                .all()
+                .assertThat()
+                .statusCode(204);
+    }
+
+    @AfterAll
+    public void destroy() {
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("api/auth/" + userDto.getUsername())
                 .then()
                 .log()
                 .all()

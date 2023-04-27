@@ -16,5 +16,5 @@ import java.util.List;
 @EqualsAndHashCode(callSuper=false)
 public class AdminDto extends UserDto {
     @NotEmpty
-    private List<RoleDao> roles;
+    private RoleDao role;
 }
