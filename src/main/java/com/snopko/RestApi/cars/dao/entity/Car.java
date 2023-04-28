@@ -1,9 +1,10 @@
 package com.snopko.RestApi.cars.dao.entity;
 
 
-import jakarta.persistence.*;
+//import jakarta.persistence.*;
 import lombok.Data;
 
+import javax.persistence.*;
 import java.sql.Date;
 
 @Data

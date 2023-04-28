@@ -1,9 +1,14 @@
 package com.snopko.RestApi.cars.controller;
 
 import com.snopko.RestApi.cars.logic.dto.OwnerDto;
+import com.snopko.RestApi.security.config.SecurityConstants;
+import com.snopko.RestApi.security.logic.dto.LoginDto;
+import com.snopko.RestApi.security.logic.dto.UserDto;
 import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,11 +25,43 @@ public class OwnerControllerTest {
     private final String host = "http://localhost";
     private OwnerDto testOwnerDto = new OwnerDto("Snopko", "Kirill");
     private long id;
+    private final UserDto userDto = new UserDto("testOwner", "password");
+    private final LoginDto login = new LoginDto("testOwner", "password");
+    private RequestSpecification specification;
 
-    @BeforeEach
-    public void configureRestAssured() {
+    @BeforeAll
+    public void init() {
         RestAssured.baseURI = host;
         RestAssured.port = port;
+
+        RestAssured.with()
+                .body(userDto)
+                .contentType(ContentType.JSON)
+                .when()
+                .post("api/auth/register")
+                .then()
+                .log()
+                .all()
+                .assertThat()
+                .statusCode(201);
+
+        String token = RestAssured.with()
+                .body(login)
+                .contentType(ContentType.JSON)
+                .when()
+                .post("api/auth/authenticate")
+                .then()
+                .log()
+                .all()
+                .statusCode(200)
+                .extract()
+                .body()
+                .jsonPath()
+                .get("accessToken");
+
+        specification = new RequestSpecBuilder()
+                .addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token)
+                .build();
     }
 
     @Test
@@ -32,7 +69,8 @@ public class OwnerControllerTest {
     @RepeatedTest(5)
     @DisplayName("Create new owner")
     public void create() {
-        ValidatableResponse vr = RestAssured.with()
+        ValidatableResponse vr = RestAssured.given(specification)
+                .with()
                 .body(testOwnerDto)
                 .contentType(ContentType.JSON)
                 .when()
@@ -49,7 +87,7 @@ public class OwnerControllerTest {
     @Order(2)
     @DisplayName("get owner by valid id")
     public void get_by_id_ok() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .get("api/owners/" + id)
@@ -64,7 +102,7 @@ public class OwnerControllerTest {
     @Order(3)
     @DisplayName("get owner by invalid id")
     public void get_by_id_not_found() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .get("api/owners/123456")
@@ -79,7 +117,7 @@ public class OwnerControllerTest {
     @Order(4)
     @DisplayName("get all owners")
     public void get_all() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .get("api/owners/all")
@@ -95,7 +133,7 @@ public class OwnerControllerTest {
     @Order(5)
     @DisplayName("get count of owners")
     public void get_count() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .get("api/owners/count")
@@ -111,7 +149,7 @@ public class OwnerControllerTest {
     @DisplayName("update owner by valid id")
     public void update() {
         testOwnerDto.setSecondName("Vova");
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON).body(testOwnerDto)
                 .when()
                 .patch("api/owners/" + id)
@@ -127,7 +165,7 @@ public class OwnerControllerTest {
     @DisplayName("update owner by invalid id")
     public void update_invalid() {
         testOwnerDto.setSecondName("error");
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON).body(testOwnerDto)
                 .when()
                 .patch("api/owners/98745632")
@@ -142,7 +180,7 @@ public class OwnerControllerTest {
     @Order(8)
     @DisplayName("delete owner by id")
     public void delete() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .delete("api/owners/" + id)
@@ -157,10 +195,23 @@ public class OwnerControllerTest {
     @Order(9)
     @DisplayName("delete all owners")
     public void delete_all() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .delete("api/owners/all")
+                .then()
+                .log()
+                .all()
+                .assertThat()
+                .statusCode(204);
+    }
+
+    @AfterAll
+    public void destroy() {
+        RestAssured.given(specification)
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("api/auth/" + userDto.getUsername())
                 .then()
                 .log()
                 .all()

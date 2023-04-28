@@ -28,7 +28,8 @@ public class CarControllerTest {
     private final String host = "http://localhost";
     private CarDto testCarDto = new CarDto("11111111er11", "Mazda", "CX5", "Sedan", "manual", "petrol", new Date(2008, 10, 10), new Date(2023, 10, 10), new Date(2023, 10, 10));
     private long id;
-    private final UserDto userDto = new UserDto("username", "password");
+    private final UserDto userDto = new UserDto("testCar", "password");
+    private final LoginDto login = new LoginDto("testCar", "password");
     private RequestSpecification specification;
 
     @BeforeAll
@@ -47,7 +48,6 @@ public class CarControllerTest {
                 .assertThat()
                 .statusCode(201);
 
-        LoginDto login = new LoginDto("username", "password");
         String token = RestAssured.with()
                 .body(login)
                 .contentType(ContentType.JSON)
@@ -57,11 +57,13 @@ public class CarControllerTest {
                 .log()
                 .all()
                 .statusCode(200)
-                .extract().path("accessToken");
+                .extract()
+                .body()
+                .jsonPath()
+                .get("accessToken");
 
         specification = new RequestSpecBuilder()
                 .addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token)
-                .setBasePath("api/cars")
                 .build();
     }
 
@@ -70,11 +72,12 @@ public class CarControllerTest {
     @RepeatedTest(5)
     @DisplayName("Create new car")
     public void create_car() {
-        ValidatableResponse vr = specification.with()
+        ValidatableResponse vr = RestAssured.given(specification)
+                .with()
                 .body(testCarDto)
                 .contentType(ContentType.JSON)
                 .when()
-                .post()
+                .post("api/cars/")
                 .then()
                 .log()
                 .all()
@@ -87,7 +90,7 @@ public class CarControllerTest {
     @Order(2)
     @DisplayName("get car by valid id")
     public void get_car_by_id_ok() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .get("api/cars/" + id)
@@ -102,7 +105,7 @@ public class CarControllerTest {
     @Order(3)
     @DisplayName("get car by invalid id")
     public void get_car_by_id_not_found() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .get("api/cars/123456")
@@ -117,7 +120,7 @@ public class CarControllerTest {
     @Order(4)
     @DisplayName("get all cars")
     public void get_all() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .get("api/cars/all")
@@ -133,7 +136,7 @@ public class CarControllerTest {
     @Order(5)
     @DisplayName("get count of car")
     public void get_car_count() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .get("api/cars/count")
@@ -149,7 +152,7 @@ public class CarControllerTest {
     @DisplayName("update car by valid id")
     public void update_car() {
         testCarDto.setTransmission("dsg");
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON).body(testCarDto)
                 .when()
                 .patch("api/cars/" + id)
@@ -165,7 +168,7 @@ public class CarControllerTest {
     @DisplayName("update car by invalid id")
     public void update_car_invalid() {
         testCarDto.setTransmission("error");
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON).body(testCarDto)
                 .when()
                 .patch("api/cars/98745632")
@@ -180,7 +183,7 @@ public class CarControllerTest {
     @Order(8)
     @DisplayName("delete car by id")
     public void delete_car() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .delete("api/cars/" + id)
@@ -195,10 +198,10 @@ public class CarControllerTest {
     @Order(9)
     @DisplayName("delete all cars")
     public void delete_all() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
-                .delete("api/auth/")
+                .delete("api/cars/all")
                 .then()
                 .log()
                 .all()
@@ -208,7 +211,7 @@ public class CarControllerTest {
 
     @AfterAll
     public void destroy() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .delete("api/auth/" + userDto.getUsername())

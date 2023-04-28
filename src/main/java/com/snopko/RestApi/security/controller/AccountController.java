@@ -6,7 +6,6 @@ import com.snopko.RestApi.security.logic.dto.LoginDto;
 import com.snopko.RestApi.security.logic.dto.UserDto;
 import com.snopko.RestApi.security.logic.service.UserDetailsServiceImpl;
 import com.snopko.RestApi.security.logic.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,21 +27,29 @@ public class AccountController {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @PostMapping("/authenticate")
+    @PostMapping(path = "/authenticate")
     public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtUtils.generateToken(authentication);
+        System.err.println(token);
         return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
     }
 
-    @PostMapping("/register")
+    @PostMapping(path = "/register")
     public ResponseEntity<String> register(@RequestBody UserDto user) {
         if (userService.existsByUsername(user.getUsername())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
         userService.register(user);
         return new ResponseEntity<>("User registered success!", HttpStatus.CREATED);
+    }
+
+    //обновить токен!!!!!!!!!!!!!!!!!!!!!!!
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<String> update(@PathVariable("id") long id, @RequestBody UserDto user) {
+        userService.update(id, user);
+        return new ResponseEntity<>("Successfully!", HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{username}")

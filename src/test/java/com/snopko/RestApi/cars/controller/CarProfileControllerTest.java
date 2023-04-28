@@ -3,9 +3,14 @@ package com.snopko.RestApi.cars.controller;
 import com.snopko.RestApi.cars.logic.dto.CarDto;
 import com.snopko.RestApi.cars.logic.dto.CarProfileDtoCreate;
 import com.snopko.RestApi.cars.logic.dto.OwnerDto;
+import com.snopko.RestApi.security.config.SecurityConstants;
+import com.snopko.RestApi.security.logic.dto.LoginDto;
+import com.snopko.RestApi.security.logic.dto.UserDto;
 import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,18 +31,46 @@ public class CarProfileControllerTest {
     private final OwnerDto testOwnerDto = new OwnerDto("Snopko", "Kirill");
     private CarProfileDtoCreate testProfileDto = new CarProfileDtoCreate();
     private long id;
+    private final UserDto userDto = new UserDto("testProfile", "password");
+    private final LoginDto login = new LoginDto("testProfile", "password");
+    private RequestSpecification specification;
 
-    @BeforeEach
-    public void configureRestAssured() {
+    @BeforeAll
+    public void init() {
         RestAssured.baseURI = host;
         RestAssured.port = port;
-    }
 
-    @Test
-    @Order(1)
-    @DisplayName("Create car and owner")
-    public void create_init() {
-        ValidatableResponse vr = RestAssured.with()
+        RestAssured.with()
+                .body(userDto)
+                .contentType(ContentType.JSON)
+                .when()
+                .post("api/auth/register")
+                .then()
+                .log()
+                .all()
+                .assertThat()
+                .statusCode(201);
+
+        String token = RestAssured.with()
+                .body(login)
+                .contentType(ContentType.JSON)
+                .when()
+                .post("api/auth/authenticate")
+                .then()
+                .log()
+                .all()
+                .statusCode(200)
+                .extract()
+                .body()
+                .jsonPath()
+                .get("accessToken");
+
+        specification = new RequestSpecBuilder()
+                .addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token)
+                .build();
+
+        ValidatableResponse vr = RestAssured.given(specification)
+                .with()
                 .body(testCarDto)
                 .contentType(ContentType.JSON)
                 .when()
@@ -49,7 +82,7 @@ public class CarProfileControllerTest {
                 .statusCode(201);
         testProfileDto.setCarId(Long.parseLong(vr.extract().path("id").toString()));
 
-        vr = RestAssured.with()
+        vr = RestAssured.given(specification).with()
                 .body(testOwnerDto)
                 .contentType(ContentType.JSON)
                 .when()
@@ -63,13 +96,14 @@ public class CarProfileControllerTest {
     }
 
     @Test
-    @Order(2)
+    @Order(1)
     @DisplayName("Create new profile")
     public void create() {
         testProfileDto.setNumber("0000 AA-7");
         System.err.println(testProfileDto.getCarId());
         System.err.println(testProfileDto.getOwnerId());
-        ValidatableResponse vr = RestAssured.with()
+        ValidatableResponse vr = RestAssured.given(specification)
+                .with()
                 .body(testProfileDto)
                 .contentType(ContentType.JSON)
                 .when()
@@ -83,10 +117,10 @@ public class CarProfileControllerTest {
     }
 
     @Test
-    @Order(3)
+    @Order(2)
     @DisplayName("get profile by valid id")
     public void get_by_id_ok() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .get("api/profiles/" + id)
@@ -98,10 +132,10 @@ public class CarProfileControllerTest {
     }
 
     @Test
-    @Order(4)
+    @Order(3)
     @DisplayName("get profile by invalid id")
     public void get_by_id_not_found() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .get("api/profile/123456")
@@ -113,10 +147,10 @@ public class CarProfileControllerTest {
     }
 
     @Test
-    @Order(5)
+    @Order(4)
     @DisplayName("get all profiles")
     public void get_all() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .get("api/profiles/all")
@@ -129,10 +163,10 @@ public class CarProfileControllerTest {
 
 
     @Test
-    @Order(6)
+    @Order(5)
     @DisplayName("get count of profiles")
     public void get_count() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .get("api/profiles/count")
@@ -144,11 +178,11 @@ public class CarProfileControllerTest {
     }
 
     @Test
-    @Order(7)
+    @Order(6)
     @DisplayName("update profile by valid id")
     public void update() {
         testProfileDto.setNumber("1111 AA-1");
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON).body(testProfileDto)
                 .when()
                 .patch("api/profiles/" + id)
@@ -160,10 +194,10 @@ public class CarProfileControllerTest {
     }
 
     @Test
-    @Order(8)
+    @Order(7)
     @DisplayName("update profile by invalid id")
     public void update_invalid() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON).body(testProfileDto)
                 .when()
                 .patch("api/profiles/98745632")
@@ -175,10 +209,10 @@ public class CarProfileControllerTest {
     }
 
     @Test
-    @Order(9)
+    @Order(8)
     @DisplayName("delete profile by id")
     public void delete() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .delete("api/profiles/" + id)
@@ -190,10 +224,10 @@ public class CarProfileControllerTest {
     }
 
     @Test
-    @Order(10)
+    @Order(9)
     @DisplayName("delete all profiles")
     public void delete_all() {
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .delete("api/profiles/all")
@@ -204,11 +238,9 @@ public class CarProfileControllerTest {
                 .statusCode(204);
     }
 
-    @Test
-    @Order(11)
-    @DisplayName("delete car and owner")
-    public void dismiss() {
-        RestAssured.given()
+    @AfterAll
+    public void destroy() {
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .delete("api/owners/" + testProfileDto.getOwnerId())
@@ -218,10 +250,20 @@ public class CarProfileControllerTest {
                 .assertThat()
                 .statusCode(204);
 
-        RestAssured.given()
+        RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
                 .delete("api/cars/" + testProfileDto.getCarId())
+                .then()
+                .log()
+                .all()
+                .assertThat()
+                .statusCode(204);
+
+        RestAssured.given(specification)
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("api/auth/" + userDto.getUsername())
                 .then()
                 .log()
                 .all()

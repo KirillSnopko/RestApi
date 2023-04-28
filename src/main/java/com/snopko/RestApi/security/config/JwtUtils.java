@@ -14,15 +14,18 @@ public class JwtUtils {
 
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
-        Date expireDate = new Date(new Date().getTime() + SecurityConstants.EXPIRATION_TIME);
+        Date current = new Date();
+        Date expireDate = new Date(current.getTime() + SecurityConstants.EXPIRATION_TIME);
 
         String token = Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date())
+                .setIssuedAt(current)
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS256, SecurityConstants.SECRET)
                 .compact();
         return token;
+
+//       return "test";
     }
 
     public String getUsernameFromToken(String token) {
