@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+
+
 @RestController
 @RequestMapping("/api/auth")
 public class AccountController {
@@ -28,12 +30,8 @@ public class AccountController {
     private JwtUtils jwtUtils;
 
     @PostMapping(path = "/authenticate")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtUtils.generateToken(authentication);
-        System.err.println(token);
-        return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
+    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto login) {
+        return new ResponseEntity<>(authAndGetToken(login.getUsername(), login.getPassword()), HttpStatus.OK);
     }
 
     @PostMapping(path = "/register")
@@ -45,16 +43,22 @@ public class AccountController {
         return new ResponseEntity<>("User registered success!", HttpStatus.CREATED);
     }
 
-    //обновить токен!!!!!!!!!!!!!!!!!!!!!!!
-    @PutMapping(path = "/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") long id, @RequestBody UserDto user) {
-        userService.update(id, user);
-        return new ResponseEntity<>("Successfully!", HttpStatus.OK);
+    @PutMapping(path = "/{username}")
+    public ResponseEntity<AuthResponseDto> update(@PathVariable("username") String username, @RequestBody UserDto user) {
+        userService.update(username, user);
+        return new ResponseEntity<>(authAndGetToken(user.getUsername(), user.getPassword()), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{username}")
     public ResponseEntity<HttpStatus> delete(@PathVariable() String username) {
         userService.deleteByUsername(username);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    private AuthResponseDto authAndGetToken(String username, String password) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtUtils.generateToken(authentication);
+        return new AuthResponseDto(username, token);
     }
 }

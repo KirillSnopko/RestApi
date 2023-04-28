@@ -6,9 +6,11 @@ import lombok.Data;
 @Data
 public class AuthResponseDto {
     private String accessToken;
+    private String username;
     private String tokenType = SecurityConstants.TOKEN_PREFIX;
 
-    public AuthResponseDto(String accessToken) {
+    public AuthResponseDto(String username, String accessToken) {
         this.accessToken = accessToken;
+        this.username = username;
     }
 }

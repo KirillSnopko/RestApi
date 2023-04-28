@@ -10,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -28,18 +27,14 @@ public class UserService {
         repository.save(newUser);
     }
 
-    public void update(long id, UserDto userDto) {
-        UserDao user = repository.findById(id).orElseThrow(() -> new NotFoundException("invalid id. user not found"));
+    public void update(String username, UserDto userDto) {
+        UserDao user = repository.findByUsername(username).orElseThrow(() -> new NotFoundException("user not found"));
         user.setUsername(userDto.getUsername());
         user.setPassword(encoder.encode(userDto.getPassword()));
     }
 
     public boolean existsByUsername(String username) {
         return repository.existsByUsername(username);
-    }
-
-    public void deleteById(long id) {
-        repository.deleteById(id);
     }
 
     public void deleteByUsername(String username) {

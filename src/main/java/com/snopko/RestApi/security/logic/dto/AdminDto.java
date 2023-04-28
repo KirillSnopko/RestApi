@@ -10,9 +10,13 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class AdminDto extends UserDto {
     @NotEmpty
     private RoleDao role;
+
+    public AdminDto(String username, String password, RoleDao role) {
+        super(username, password);
+        this.role = role;
+    }
 }
