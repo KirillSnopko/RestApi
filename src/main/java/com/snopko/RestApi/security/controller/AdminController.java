@@ -2,14 +2,12 @@ package com.snopko.RestApi.security.controller;
 
 import com.snopko.RestApi.security.dao.entity.UserDao;
 import com.snopko.RestApi.security.logic.dto.AdminDto;
-import com.snopko.RestApi.security.logic.dto.UserDto;
 import com.snopko.RestApi.security.logic.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.transform.sax.SAXResult;
 import java.util.List;
 
 @RestController
@@ -33,7 +31,7 @@ public class AdminController {
         if (service.existsByUsername(user.getUsername())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(service.create(user), HttpStatus.OK);
+        return new ResponseEntity<>(service.create(user), HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/{id}")

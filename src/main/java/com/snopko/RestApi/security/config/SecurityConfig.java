@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(auth -> auth
                         .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-                        .antMatchers("/api/admin","/api/admin/**").hasRole(RoleDao.ADMIN.getName())
+                        .antMatchers("/api/admin/**", "/api/admin").hasAuthority(RoleDao.ADMIN.getName())
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
                 .httpBasic();
