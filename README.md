@@ -1,20 +1,19 @@
-# SpringBoot RestApi
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-02303A.svg?style=for-the-badge&logo=Gradle&logoColor=white)
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
 
-	![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
-
-## Table of contents
-* [General info](#general-info)
-* [Technologies](#technologies)
-* [Setup](#setup)
+# Spring Boot Rest Api
+![](https://img.shields.io/badge/Spring%20Boot-v2.7.11-green)
+![](https://img.shields.io/badge/Java-17-green)
+![](https://img.shields.io/badge/Gradle-7.6.1-green)
+![](https://img.shields.io/badge/jjwt-0.9.1-green)
+![](https://img.shields.io/badge/REST%20Assured-green)
+![](https://img.shields.io/badge/lombok-blue)
 
 ## General info
-This project is simple Lorem ipsum dolor generator.
-	
-## Technologies
-Project is created with:
-* Lorem version: 12.3
-* Ipsum version: 2.33
-* Ament library version: 999
+This project is an example of working with a database using Spring Boot and JWT authentication.
 
-# Hi there, I'm [Daniil](https://daniilshat.ru/) ![](https://github.com/blackcater/blackcater/raw/main/images/Hi.gif) 
-### Computer science student, IT news writer from Russia 🇷🇺
+
+
+
