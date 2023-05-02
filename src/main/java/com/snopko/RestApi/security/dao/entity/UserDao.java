@@ -14,10 +14,10 @@ import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class UserDao implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
