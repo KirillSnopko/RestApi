@@ -11,6 +11,7 @@ import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -23,10 +24,12 @@ public class OwnerControllerTest {
     @LocalServerPort
     private Integer port;
     private final String host = "http://localhost";
+    @Value("${default.admin.username}")
+    private String testUsername;
+    @Value("${default.admin.password}")
+    private String testPassword;
     private OwnerDto testOwnerDto = new OwnerDto("Snopko", "Kirill");
     private long id;
-    private final UserDto userDto = new UserDto("testOwner", "password");
-    private final LoginDto login = new LoginDto("testOwner", "password");
     private RequestSpecification specification;
 
     @BeforeAll
@@ -34,17 +37,7 @@ public class OwnerControllerTest {
         RestAssured.baseURI = host;
         RestAssured.port = port;
 
-        RestAssured.with()
-                .body(userDto)
-                .contentType(ContentType.JSON)
-                .when()
-                .post("api/auth/register")
-                .then()
-                .log()
-                .all()
-                .assertThat()
-                .statusCode(201);
-
+        LoginDto login = new LoginDto(testUsername, testPassword);
         String token = RestAssured.with()
                 .body(login)
                 .contentType(ContentType.JSON)
@@ -199,19 +192,6 @@ public class OwnerControllerTest {
                 .contentType(ContentType.JSON)
                 .when()
                 .delete("api/owners/all")
-                .then()
-                .log()
-                .all()
-                .assertThat()
-                .statusCode(204);
-    }
-
-    @AfterAll
-    public void destroy() {
-        RestAssured.given(specification)
-                .contentType(ContentType.JSON)
-                .when()
-                .delete("api/auth/" + userDto.getUsername())
                 .then()
                 .log()
                 .all()

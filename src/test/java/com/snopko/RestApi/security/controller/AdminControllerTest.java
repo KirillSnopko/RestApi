@@ -13,6 +13,7 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -27,7 +28,10 @@ public class AdminControllerTest {
     @LocalServerPort
     private Integer port;
     private final String host = "http://localhost";
-    private final AdminDto defaultAdmin = new AdminDto("admin00", "admin00", RoleDao.ADMIN);
+    @Value("${default.admin.username}")
+    private String username;
+    @Value("${default.admin.password}")
+    private String password;
     private final AdminDto newAdmin = new AdminDto("admin1", "admin1", RoleDao.ADMIN);
     private long newAdminId;
     private RequestSpecification specification;
@@ -36,14 +40,13 @@ public class AdminControllerTest {
     public void init() {
         RestAssured.baseURI = host;
         RestAssured.port = port;
-        service.create(defaultAdmin);
     }
 
     @Test
     @Order(1)
     @DisplayName("login OK")
     public void login_200() {
-        LoginDto login = new LoginDto(defaultAdmin.getUsername(), defaultAdmin.getPassword());
+        LoginDto login = new LoginDto(username, password);
         ValidatableResponse vr = RestAssured.with()
                 .body(login)
                 .contentType(ContentType.JSON)
@@ -131,7 +134,7 @@ public class AdminControllerTest {
     @Test
     @Order(6)
     @DisplayName("delete user by id")
-    public void delete_car() {
+    public void delete() {
         RestAssured.given(specification)
                 .contentType(ContentType.JSON)
                 .when()
@@ -141,10 +144,5 @@ public class AdminControllerTest {
                 .all()
                 .assertThat()
                 .statusCode(204);
-    }
-
-    @AfterAll
-    public void destroy() {
-        service.deleteAll();
     }
 }

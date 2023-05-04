@@ -13,6 +13,7 @@ import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -27,12 +28,14 @@ public class CarProfileControllerTest {
     @LocalServerPort
     private Integer port;
     private final String host = "http://localhost";
+    @Value("${default.admin.username}")
+    private String testUsername;
+    @Value("${default.admin.password}")
+    private String testPassword;
     private final CarDto testCarDto = new CarDto("11111111er11", "Mazda", "CX5", "Sedan", "manual", "petrol", new Date(2008, 10, 10), new Date(2023, 10, 10), new Date(2023, 10, 10));
     private final OwnerDto testOwnerDto = new OwnerDto("Snopko", "Kirill");
     private CarProfileDtoCreate testProfileDto = new CarProfileDtoCreate();
     private long id;
-    private final UserDto userDto = new UserDto("testProfile", "password");
-    private final LoginDto login = new LoginDto("testProfile", "password");
     private RequestSpecification specification;
 
     @BeforeAll
@@ -40,17 +43,7 @@ public class CarProfileControllerTest {
         RestAssured.baseURI = host;
         RestAssured.port = port;
 
-        RestAssured.with()
-                .body(userDto)
-                .contentType(ContentType.JSON)
-                .when()
-                .post("api/auth/register")
-                .then()
-                .log()
-                .all()
-                .assertThat()
-                .statusCode(201);
-
+        LoginDto login = new LoginDto(testUsername, testPassword);
         String token = RestAssured.with()
                 .body(login)
                 .contentType(ContentType.JSON)
@@ -254,16 +247,6 @@ public class CarProfileControllerTest {
                 .contentType(ContentType.JSON)
                 .when()
                 .delete("api/cars/" + testProfileDto.getCarId())
-                .then()
-                .log()
-                .all()
-                .assertThat()
-                .statusCode(204);
-
-        RestAssured.given(specification)
-                .contentType(ContentType.JSON)
-                .when()
-                .delete("api/auth/" + userDto.getUsername())
                 .then()
                 .log()
                 .all()
