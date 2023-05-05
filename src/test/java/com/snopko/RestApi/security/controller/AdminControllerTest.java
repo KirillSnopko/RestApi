@@ -1,7 +1,7 @@
 package com.snopko.RestApi.security.controller;
 
 import com.snopko.RestApi.security.config.SecurityConstants;
-import com.snopko.RestApi.security.dao.entity.RoleDao;
+import com.snopko.RestApi.security.dao.entity.AppRole;
 import com.snopko.RestApi.security.logic.dto.AdminDto;
 import com.snopko.RestApi.security.logic.dto.LoginDto;
 import com.snopko.RestApi.security.logic.service.AdminService;
@@ -32,7 +32,7 @@ public class AdminControllerTest {
     private String username;
     @Value("${default.admin.password}")
     private String password;
-    private final AdminDto newAdmin = new AdminDto("admin1", "admin1", RoleDao.ADMIN);
+    private final AdminDto newAdmin = new AdminDto("admin1", "admin1", AppRole.ADMIN);
     private long newAdminId;
     private RequestSpecification specification;
 

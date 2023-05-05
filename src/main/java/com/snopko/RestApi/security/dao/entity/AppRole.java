@@ -1,10 +1,10 @@
 package com.snopko.RestApi.security.dao.entity;
 
-public enum RoleDao {
+public enum AppRole {
     ADMIN("ADMIN"), USER("USER");
     private String name;
 
-    RoleDao(String name) {
+    AppRole(String name) {
         this.name = name;
     }
 

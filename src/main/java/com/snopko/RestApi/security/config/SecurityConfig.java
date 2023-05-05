@@ -1,6 +1,6 @@
 package com.snopko.RestApi.security.config;
 
-import com.snopko.RestApi.security.dao.entity.RoleDao;
+import com.snopko.RestApi.security.dao.entity.AppRole;
 import com.snopko.RestApi.security.logic.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(auth -> auth
                         .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-                        .antMatchers("/api/admin/**", "/api/admin").hasAuthority(RoleDao.ADMIN.getName())
+                        .antMatchers("/api/admin/**", "/api/admin").hasAuthority(AppRole.ADMIN.getName())
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
                 .httpBasic();

@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class UserDao implements UserDetails {
+public class AppUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -28,7 +28,7 @@ public class UserDao implements UserDetails {
     private String password;
     @NotNull
     @Enumerated(EnumType.STRING)
-    private RoleDao role;
+    private AppRole role;
 
     @CreatedBy
     private String createdBy;
