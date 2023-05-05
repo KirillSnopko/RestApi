@@ -1,6 +1,5 @@
 package com.snopko.RestApi.security.dao.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,17 +17,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class UserDao implements UserDetails {
+public class AppUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(unique = true)
     private String username;
-    @JsonIgnore
     private String password;
     @NotNull
     @Enumerated(EnumType.STRING)
-    private RoleDao role;
+    private AppRole role;
 
     @CreatedBy
     private String createdBy;
@@ -40,5 +38,18 @@ public class UserDao implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.getName()));
+    }
+
+    public AppUser(String username, String password, AppRole role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
+    public AppUser update(String username, String password, AppRole role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        return this;
     }
 }

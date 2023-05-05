@@ -1,6 +1,5 @@
 package com.snopko.RestApi.cars.dao.entity;
 
-//import jakarta.persistence.*;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,4 +18,11 @@ public class Owner {
     private String secondName;
     @OneToMany(targetEntity = CarProfile.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CarProfile> profiles;
+
+    public Owner update(Owner owner) {
+        firstName = owner.firstName;
+        secondName = owner.secondName;
+        profiles = owner.profiles;
+        return this;
+    }
 }

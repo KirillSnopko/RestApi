@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OwnerDtoWithProfiles {
+    private long id;
     private String firstName;
     private String secondName;
     private List<Profile> profiles;

@@ -5,16 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
-    private long id;
+public class AdminDtoCreate {
+    @NotEmpty
     private String username;
+    @NotEmpty
+    private String password;
+    @NotEmpty
     private AppRole role;
-    private String createdBy;
-    private boolean accountNonExpired = true;
-    private boolean accountNonLocked = true;
-    private boolean credentialsNonExpired = true;
-    private boolean enabled = true;
 }

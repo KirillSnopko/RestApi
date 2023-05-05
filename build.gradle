@@ -36,7 +36,6 @@ dependencies {
     testImplementation 'io.rest-assured:json-path'
     testImplementation 'io.rest-assured:spring-mock-mvc'
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
-
 }
 
 tasks.named('test') {

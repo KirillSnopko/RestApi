@@ -3,8 +3,7 @@ package com.snopko.RestApi.security.controller;
 import com.snopko.RestApi.security.config.JwtUtils;
 import com.snopko.RestApi.security.logic.dto.AuthResponseDto;
 import com.snopko.RestApi.security.logic.dto.LoginDto;
-import com.snopko.RestApi.security.logic.dto.UserDto;
-import com.snopko.RestApi.security.logic.service.UserDetailsServiceImpl;
+import com.snopko.RestApi.security.logic.dto.UserDtoCreate;
 import com.snopko.RestApi.security.logic.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,15 +14,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-
-
 @RestController
 @RequestMapping("/api/auth")
 public class AccountController {
     @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
-    private UserDetailsServiceImpl detailsService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -35,7 +30,7 @@ public class AccountController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<String> register(@RequestBody UserDto user) {
+    public ResponseEntity<String> register(@RequestBody UserDtoCreate user) {
         if (userService.existsByUsername(user.getUsername())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
@@ -44,7 +39,7 @@ public class AccountController {
     }
 
     @PutMapping(path = "/{username}")
-    public ResponseEntity<AuthResponseDto> update(@PathVariable("username") String username, @RequestBody UserDto user) {
+    public ResponseEntity<AuthResponseDto> update(@PathVariable("username") String username, @RequestBody UserDtoCreate user) {
         userService.update(username, user);
         return new ResponseEntity<>(authAndGetToken(user.getUsername(), user.getPassword()), HttpStatus.OK);
     }

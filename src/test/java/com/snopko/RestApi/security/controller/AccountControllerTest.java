@@ -2,7 +2,7 @@ package com.snopko.RestApi.security.controller;
 
 import com.snopko.RestApi.security.config.SecurityConstants;
 import com.snopko.RestApi.security.logic.dto.LoginDto;
-import com.snopko.RestApi.security.logic.dto.UserDto;
+import com.snopko.RestApi.security.logic.dto.UserDtoCreate;
 import com.snopko.RestApi.security.logic.service.UserService;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -27,7 +27,7 @@ public class AccountControllerTest {
     @Autowired
     UserService service;
     private final String host = "http://localhost";
-    private final UserDto userDto = new UserDto("testUser", "password");
+    private final UserDtoCreate userDto = new UserDtoCreate("testUser", "password");
     private RequestSpecification specification;
 
     @BeforeAll

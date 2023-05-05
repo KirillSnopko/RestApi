@@ -2,7 +2,6 @@ package com.snopko.RestApi.cars.controller;
 
 import com.snopko.RestApi.cars.logic.dto.CarProfileDto;
 import com.snopko.RestApi.cars.logic.dto.CarProfileDtoCreate;
-import com.snopko.RestApi.cars.logic.dto.Dto;
 import com.snopko.RestApi.cars.logic.service.CarProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,22 +23,22 @@ public class CarProfileController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Dto<CarProfileDto>> get(@PathVariable("id") long id) {
+    public ResponseEntity<CarProfileDto> get(@PathVariable("id") long id) {
         return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
     }
 
     @GetMapping(path = "/all")
-    public ResponseEntity<List<Dto<CarProfileDto>>> get() {
+    public ResponseEntity<List<CarProfileDto>> get() {
         return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<Dto<CarProfileDto>> create(@RequestBody CarProfileDtoCreate dto) {
+    public ResponseEntity<CarProfileDto> create(@RequestBody CarProfileDtoCreate dto) {
         return new ResponseEntity<>(service.add(dto), HttpStatus.CREATED);
     }
 
     @PatchMapping(path = "/{id}")
-    public ResponseEntity<Dto<CarProfileDto>> update(@PathVariable("id") long id, @RequestBody CarProfileDtoCreate dto) {
+    public ResponseEntity<CarProfileDto> update(@PathVariable("id") long id, @RequestBody CarProfileDtoCreate dto) {
         return new ResponseEntity<>(service.update(dto, id), HttpStatus.OK);
     }
 

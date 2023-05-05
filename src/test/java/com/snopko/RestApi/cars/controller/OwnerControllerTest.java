@@ -1,9 +1,8 @@
 package com.snopko.RestApi.cars.controller;
 
-import com.snopko.RestApi.cars.logic.dto.OwnerDto;
+import com.snopko.RestApi.cars.logic.dto.OwnerCreateDto;
 import com.snopko.RestApi.security.config.SecurityConstants;
 import com.snopko.RestApi.security.logic.dto.LoginDto;
-import com.snopko.RestApi.security.logic.dto.UserDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -28,7 +27,7 @@ public class OwnerControllerTest {
     private String testUsername;
     @Value("${default.admin.password}")
     private String testPassword;
-    private OwnerDto testOwnerDto = new OwnerDto("Snopko", "Kirill");
+    private OwnerCreateDto testOwnerDto = new OwnerCreateDto("Snopko", "Kirill");
     private long id;
     private RequestSpecification specification;
 

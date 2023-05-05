@@ -2,8 +2,8 @@ package com.snopko.RestApi.cars.logic.service;
 
 import com.snopko.RestApi.cars.dao.entity.Car;
 import com.snopko.RestApi.cars.dao.repository.ICarRepository;
+import com.snopko.RestApi.cars.logic.dto.CarCreateDto;
 import com.snopko.RestApi.cars.logic.dto.CarDto;
-import com.snopko.RestApi.cars.logic.dto.Dto;
 import com.snopko.RestApi.cars.logic.exception.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,35 +24,26 @@ public class CarService {
         return repository.count();
     }
 
-    public Dto<CarDto> getById(long id) {
+    public CarDto getById(long id) {
         Car car = repository.findById(id).orElseThrow(() -> new NotFoundException("car with id=" + id + " not found"));
-        return new Dto<CarDto>(car.getId(), mapper.map(car, CarDto.class));
+        return mapper.map(car, CarDto.class);
     }
 
-    public List<Dto<CarDto>> getAll() {
+    public List<CarDto> getAll() {
         return StreamSupport.stream(repository.findAll().spliterator(), true)
-                .map(i -> new Dto<CarDto>(i.getId(), mapper.map(i, CarDto.class)))
+                .map(i -> mapper.map(i, CarDto.class))
                 .collect(Collectors.toList());
     }
 
-    public Dto<CarDto> add(CarDto dto) {
+    public CarDto add(CarCreateDto dto) {
         Car car = repository.save(mapper.map(dto, Car.class));
-        return new Dto<CarDto>(car.getId(), mapper.map(car, CarDto.class));
+        return mapper.map(car, CarDto.class);
     }
 
-    public Dto<CarDto> update(CarDto dto, long id) {
+    public CarDto update(CarCreateDto dto, long id) {
         Car car = repository.findById(id).orElseThrow(() -> new NotFoundException("car with id=" + id + " not found"));
-        car.setBodyNumber(dto.getBodyNumber());
-        car.setBrand(dto.getBrand());
-        car.setModal(dto.getModal());
-        car.setBodyType(dto.getBodyType());
-        car.setTransmission(dto.getTransmission());
-        car.setFuelType(dto.getFuelType());
-        car.setYearOfProduction(dto.getYearOfProduction());
-        car.setMOT(dto.getMOT());
-        car.setInsurance(dto.getInsurance());
-
-        return new Dto<CarDto>(car.getId(), mapper.map(car, CarDto.class));
+        Car updated = repository.save(car.update(mapper.map(dto, Car.class)));
+        return mapper.map(updated, CarDto.class);
     }
 
     public void delete(long id) {

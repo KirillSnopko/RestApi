@@ -1,15 +1,19 @@
 package com.snopko.RestApi.security.logic.service;
 
 import com.snopko.RestApi.cars.logic.exception.NotFoundException;
-import com.snopko.RestApi.security.dao.entity.UserDao;
+import com.snopko.RestApi.security.dao.entity.AppUser;
 import com.snopko.RestApi.security.dao.repository.IUserRepository;
-import com.snopko.RestApi.security.logic.dto.AdminDto;
+import com.snopko.RestApi.security.logic.dto.AdminDtoCreate;
+import com.snopko.RestApi.security.logic.dto.UserDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @Transactional
@@ -18,34 +22,33 @@ public class AdminService {
     private IUserRepository repository;
     @Autowired
     private PasswordEncoder encoder;
+    @Autowired
+    private ModelMapper mapper;
 
-    public List<UserDao> getAll() {
-        return repository.findAll();
+    public List<UserDto> getAll() {
+        return StreamSupport.stream(repository.findAll().spliterator(), true)
+                .map(i -> mapper.map(i, UserDto.class))
+                .collect(Collectors.toList());
     }
 
-    public UserDao findById(long id) {
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("invalid id. user not found"));
+    public UserDto findById(long id) {
+        AppUser user = repository.findById(id).orElseThrow(() -> new NotFoundException("invalid id. user not found"));
+        return mapper.map(user, UserDto.class);
     }
 
     public boolean existsByUsername(String username) {
         return repository.existsByUsername(username);
     }
 
-    public UserDao create(AdminDto user) {
-        UserDao newUser = new UserDao();
-        newUser.setUsername(user.getUsername());
-        newUser.setPassword(encoder.encode(user.getPassword()));
-        newUser.setRole(user.getRole());
-
-        return repository.save(newUser);
+    public UserDto create(AdminDtoCreate user) {
+        AppUser newUser = new AppUser(user.getUsername(), encoder.encode(user.getPassword()), user.getRole());
+        return mapper.map(repository.save(newUser), UserDto.class);
     }
 
-    public UserDao update(long id, AdminDto userDto) {
-        UserDao user = repository.findById(id).orElseThrow(() -> new NotFoundException("invalid id. user not found"));
-        user.setUsername(userDto.getUsername());
-        user.setPassword(encoder.encode(userDto.getPassword()));
-        user.setRole(userDto.getRole());
-        return user;
+    public UserDto update(long id, AdminDtoCreate dto) {
+        AppUser user = repository.findById(id).orElseThrow(() -> new NotFoundException("invalid id. user not found"));
+        user.update(dto.getUsername(), encoder.encode(dto.getPassword()), dto.getRole());
+        return mapper.map(repository.save(user), UserDto.class);
     }
 
     public void deleteById(long id) {

@@ -1,7 +1,7 @@
 package com.snopko.RestApi.security.config;
 
-import com.snopko.RestApi.security.dao.entity.RoleDao;
-import com.snopko.RestApi.security.dao.entity.UserDao;
+import com.snopko.RestApi.security.dao.entity.AppRole;
+import com.snopko.RestApi.security.dao.entity.AppUser;
 import com.snopko.RestApi.security.dao.repository.IUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +24,10 @@ public class DatabaseConfig {
 
     @Bean
     CommandLineRunner initDatabase(IUserRepository repository) {
-        UserDao admin = new UserDao();
+        AppUser admin = new AppUser();
         admin.setUsername(adminUsername);
         admin.setPassword(encoder.encode(adminPassword));
-        admin.setRole(RoleDao.ADMIN);
+        admin.setRole(AppRole.ADMIN);
 
         return args -> {
             if (!repository.existsByUsername(adminUsername)) {

@@ -8,7 +8,6 @@ import com.snopko.RestApi.cars.dao.repository.ICarRepository;
 import com.snopko.RestApi.cars.dao.repository.IOwnerRepository;
 import com.snopko.RestApi.cars.logic.dto.CarProfileDto;
 import com.snopko.RestApi.cars.logic.dto.CarProfileDtoCreate;
-import com.snopko.RestApi.cars.logic.dto.Dto;
 import com.snopko.RestApi.cars.logic.exception.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,19 +32,18 @@ public class CarProfileService {
         return carProfileRepository.count();
     }
 
-    public Dto<CarProfileDto> getById(long id) {
+    public CarProfileDto getById(long id) {
         CarProfile profile = carProfileRepository.findById(id).orElseThrow(() -> new NotFoundException("profile with id=" + id + " not found"));
-
-        return new Dto<CarProfileDto>(profile.getId(), mapper.map(profile, CarProfileDto.class));
+        return mapper.map(profile, CarProfileDto.class);
     }
 
-    public List<Dto<CarProfileDto>> getAll() {
+    public List<CarProfileDto> getAll() {
         return StreamSupport.stream(carProfileRepository.findAll().spliterator(), true)
-                .map(i -> new Dto<CarProfileDto>(i.getId(), mapper.map(i, CarProfileDto.class)))
+                .map(i -> mapper.map(i, CarProfileDto.class))
                 .collect(Collectors.toList());
     }
 
-    public Dto<CarProfileDto> add(CarProfileDtoCreate dto) {
+    public CarProfileDto add(CarProfileDtoCreate dto) {
         Car car = carRepository.findById(dto.getCarId()).orElseThrow(() -> new NotFoundException("car with id=" + dto.getCarId() + " not found"));
         Owner owner = ownerRepository.findById(dto.getOwnerId()).orElseThrow(() -> new NotFoundException("owner with id=" + dto.getOwnerId() + " not found"));
 
@@ -54,11 +52,10 @@ public class CarProfileService {
         newProfile.setOwner(owner);
         newProfile.setNumber(dto.getNumber());
         CarProfile carProfile = carProfileRepository.save(newProfile);
-
-        return new Dto<>(carProfile.getId(), mapper.map(carProfile, CarProfileDto.class));
+        return mapper.map(carProfile, CarProfileDto.class);
     }
 
-    public Dto<CarProfileDto> update(CarProfileDtoCreate dto, long id) {
+    public CarProfileDto update(CarProfileDtoCreate dto, long id) {
         CarProfile profile = carProfileRepository.findById(id).orElseThrow(() -> new NotFoundException("profile with id=" + id + " not found"));
         if (profile.getCar().getId() != dto.getCarId()) {
             Car car = carRepository.findById(dto.getCarId()).orElseThrow(() -> new NotFoundException("car id is invalid"));
@@ -68,7 +65,9 @@ public class CarProfileService {
             Owner owner = ownerRepository.findById(dto.getOwnerId()).orElseThrow(() -> new NotFoundException("owner id is invalid"));
             profile.setOwner(owner);
         }
-        return new Dto<CarProfileDto>(profile.getId(), mapper.map(profile, CarProfileDto.class));
+
+        CarProfile updated = carProfileRepository.save(profile);
+        return mapper.map(updated, CarProfileDto.class);
     }
 
     public void delete(long id) {

@@ -1,6 +1,6 @@
 package com.snopko.RestApi.cars.controller;
 
-import com.snopko.RestApi.cars.logic.dto.Dto;
+import com.snopko.RestApi.cars.logic.dto.OwnerCreateDto;
 import com.snopko.RestApi.cars.logic.dto.OwnerDto;
 import com.snopko.RestApi.cars.logic.dto.OwnerDtoWithProfiles;
 import com.snopko.RestApi.cars.logic.service.OwnerService;
@@ -23,22 +23,22 @@ public class OwnerController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Dto<OwnerDtoWithProfiles>> get(@PathVariable("id") long id) {
+    public ResponseEntity<OwnerDtoWithProfiles> get(@PathVariable("id") long id) {
         return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
     }
 
     @GetMapping(path = "/all")
-    public ResponseEntity<List<Dto<OwnerDto>>> get() {
+    public ResponseEntity<List<OwnerDto>> get() {
         return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<Dto<OwnerDto>> create(@RequestBody OwnerDto dto) {
+    public ResponseEntity<OwnerDto> create(@RequestBody OwnerCreateDto dto) {
         return new ResponseEntity<>(service.add(dto), HttpStatus.CREATED);
     }
 
     @PatchMapping(path = "/{id}")
-    public ResponseEntity<Dto<OwnerDto>> update(@PathVariable("id") long id, @RequestBody OwnerDto dtoUp) {
+    public ResponseEntity<OwnerDto> update(@PathVariable("id") long id, @RequestBody OwnerCreateDto dtoUp) {
         return new ResponseEntity<>(service.update(dtoUp, id), HttpStatus.OK);
     }
 

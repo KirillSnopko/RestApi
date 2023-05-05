@@ -1,11 +1,10 @@
 package com.snopko.RestApi.cars.controller;
 
-import com.snopko.RestApi.cars.logic.dto.CarDto;
+import com.snopko.RestApi.cars.logic.dto.CarCreateDto;
 import com.snopko.RestApi.cars.logic.dto.CarProfileDtoCreate;
-import com.snopko.RestApi.cars.logic.dto.OwnerDto;
+import com.snopko.RestApi.cars.logic.dto.OwnerCreateDto;
 import com.snopko.RestApi.security.config.SecurityConstants;
 import com.snopko.RestApi.security.logic.dto.LoginDto;
-import com.snopko.RestApi.security.logic.dto.UserDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -32,8 +31,8 @@ public class CarProfileControllerTest {
     private String testUsername;
     @Value("${default.admin.password}")
     private String testPassword;
-    private final CarDto testCarDto = new CarDto("11111111er11", "Mazda", "CX5", "Sedan", "manual", "petrol", new Date(2008, 10, 10), new Date(2023, 10, 10), new Date(2023, 10, 10));
-    private final OwnerDto testOwnerDto = new OwnerDto("Snopko", "Kirill");
+    private final CarCreateDto testCarDto = new CarCreateDto("11111111er11", "Mazda", "CX5", "Sedan", "manual", "petrol", new Date(2008, 10, 10), new Date(2023, 10, 10), new Date(2023, 10, 10));
+    private final OwnerCreateDto testOwnerDto = new OwnerCreateDto("Snopko", "Kirill");
     private CarProfileDtoCreate testProfileDto = new CarProfileDtoCreate();
     private long id;
     private RequestSpecification specification;

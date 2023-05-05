@@ -1,9 +1,8 @@
 package com.snopko.RestApi.cars.controller;
 
-import com.snopko.RestApi.cars.logic.dto.CarDto;
+import com.snopko.RestApi.cars.logic.dto.CarCreateDto;
 import com.snopko.RestApi.security.config.SecurityConstants;
 import com.snopko.RestApi.security.logic.dto.LoginDto;
-import com.snopko.RestApi.security.logic.dto.UserDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -31,7 +30,7 @@ public class CarControllerTest {
     private String testUsername;
     @Value("${default.admin.password}")
     private String testPassword;
-    private CarDto testCarDto = new CarDto("11111111er11", "Mazda", "CX5", "Sedan", "manual", "petrol", new Date(2008, 10, 10), new Date(2023, 10, 10), new Date(2023, 10, 10));
+    private CarCreateDto testCarDto = new CarCreateDto("11111111er11", "Mazda", "CX5", "Sedan", "manual", "petrol", new Date(2008, 10, 10), new Date(2023, 10, 10), new Date(2023, 10, 10));
     private long id;
     private RequestSpecification specification;
 

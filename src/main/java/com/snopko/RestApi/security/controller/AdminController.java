@@ -1,7 +1,7 @@
 package com.snopko.RestApi.security.controller;
 
-import com.snopko.RestApi.security.dao.entity.UserDao;
-import com.snopko.RestApi.security.logic.dto.AdminDto;
+import com.snopko.RestApi.security.logic.dto.AdminDtoCreate;
+import com.snopko.RestApi.security.logic.dto.UserDto;
 import com.snopko.RestApi.security.logic.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,17 +17,17 @@ public class AdminController {
     private AdminService service;
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<UserDao> get(@PathVariable long id) {
+    public ResponseEntity<UserDto> get(@PathVariable long id) {
         return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
     }
 
     @GetMapping(path = "/all")
-    public ResponseEntity<List<UserDao>> getAll() {
+    public ResponseEntity<List<UserDto>> getAll() {
         return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<UserDao> add(@RequestBody AdminDto user) {
+    public ResponseEntity<UserDto> add(@RequestBody AdminDtoCreate user) {
         if (service.existsByUsername(user.getUsername())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -35,7 +35,7 @@ public class AdminController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<UserDao> update(@PathVariable("id") long id, @RequestBody AdminDto user) {
+    public ResponseEntity<UserDto> update(@PathVariable("id") long id, @RequestBody AdminDtoCreate user) {
         return new ResponseEntity<>(service.update(id, user), HttpStatus.OK);
     }
 
