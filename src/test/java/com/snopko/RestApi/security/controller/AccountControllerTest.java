@@ -27,7 +27,7 @@ public class AccountControllerTest {
     @Autowired
     UserService service;
     private final String host = "http://localhost";
-    private final UserDtoCreate userDto = new UserDtoCreate("testUser", "password");
+    private final UserDtoCreate userDto = new UserDtoCreate("testUser", "password","test@gmail.com");
     private RequestSpecification specification;
 
     @BeforeAll

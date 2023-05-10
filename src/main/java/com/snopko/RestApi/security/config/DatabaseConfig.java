@@ -21,6 +21,8 @@ public class DatabaseConfig {
     private String adminUsername;
     @Value("${default.admin.password}")
     private String adminPassword;
+    @Value("${default.admin.email}")
+    private String email;
 
     @Bean
     CommandLineRunner initDatabase(IUserRepository repository) {
@@ -28,6 +30,7 @@ public class DatabaseConfig {
         admin.setUsername(adminUsername);
         admin.setPassword(encoder.encode(adminPassword));
         admin.setRole(AppRole.ADMIN);
+        admin.setEmail(email);
 
         return args -> {
             if (!repository.existsByUsername(adminUsername)) {

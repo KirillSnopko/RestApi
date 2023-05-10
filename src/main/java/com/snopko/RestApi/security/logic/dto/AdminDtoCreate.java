@@ -16,5 +16,8 @@ public class AdminDtoCreate {
     @NotEmpty
     private String password;
     @NotEmpty
+    private String email;
+    @NotEmpty
     private AppRole role;
+
 }

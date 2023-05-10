@@ -5,12 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
     private long id;
     private String username;
+    private String email;
     private AppRole role;
     private String createdBy;
     private boolean accountNonExpired = true;

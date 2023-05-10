@@ -20,17 +20,14 @@ public class UserService {
     private PasswordEncoder encoder;
 
     public void register(UserDtoCreate user) {
-        AppUser newUser = new AppUser();
-        newUser.setUsername(user.getUsername());
-        newUser.setPassword(encoder.encode(user.getPassword()));
-        newUser.setRole(AppRole.USER);
+        AppUser newUser = new AppUser(user.getUsername(), encoder.encode(user.getPassword()), user.getEmail(), AppRole.USER);
         repository.save(newUser);
     }
 
     public void update(String username, UserDtoCreate userDto) {
         AppUser user = repository.findByUsername(username).orElseThrow(() -> new NotFoundException("user not found"));
-        user.setUsername(userDto.getUsername());
-        user.setPassword(encoder.encode(userDto.getPassword()));
+        user.update(userDto.getUsername(), encoder.encode(userDto.getPassword()), userDto.getEmail());
+        repository.save(user);
     }
 
     public boolean existsByUsername(String username) {

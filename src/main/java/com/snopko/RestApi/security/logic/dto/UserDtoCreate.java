@@ -14,4 +14,6 @@ public class UserDtoCreate {
     private String username;
     @NotEmpty
     private String password;
+    @NotEmpty
+    private String email;
 }

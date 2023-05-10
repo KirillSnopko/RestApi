@@ -32,7 +32,7 @@ public class AdminControllerTest {
     private String username;
     @Value("${default.admin.password}")
     private String password;
-    private final AdminDtoCreate newAdmin = new AdminDtoCreate("admin1", "admin1", AppRole.ADMIN);
+    private final AdminDtoCreate newAdmin = new AdminDtoCreate("admin1", "admin1", "admin1@gmail.com", AppRole.ADMIN);
     private long newAdminId;
     private RequestSpecification specification;
 

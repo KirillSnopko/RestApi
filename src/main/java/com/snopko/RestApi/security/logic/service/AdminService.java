@@ -41,13 +41,13 @@ public class AdminService {
     }
 
     public UserDto create(AdminDtoCreate user) {
-        AppUser newUser = new AppUser(user.getUsername(), encoder.encode(user.getPassword()), user.getRole());
+        AppUser newUser = new AppUser(user.getUsername(), encoder.encode(user.getPassword()), user.getEmail(), user.getRole());
         return mapper.map(repository.save(newUser), UserDto.class);
     }
 
     public UserDto update(long id, AdminDtoCreate dto) {
         AppUser user = repository.findById(id).orElseThrow(() -> new NotFoundException("invalid id. user not found"));
-        user.update(dto.getUsername(), encoder.encode(dto.getPassword()), dto.getRole());
+        user.update(dto.getUsername(), encoder.encode(dto.getPassword()), user.getEmail(), dto.getRole());
         return mapper.map(repository.save(user), UserDto.class);
     }
 

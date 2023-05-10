@@ -23,6 +23,8 @@ public class AppUser implements UserDetails {
     private long id;
     @Column(unique = true)
     private String username;
+    @Column(unique = true)
+    private String email;
     private String password;
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -40,16 +42,25 @@ public class AppUser implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.getName()));
     }
 
-    public AppUser(String username, String password, AppRole role) {
+    public AppUser(String username, String password, String email, AppRole role) {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.email = email;
     }
 
-    public AppUser update(String username, String password, AppRole role) {
+    public AppUser update(String username, String password, String email, AppRole role) {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.email = email;
+        return this;
+    }
+
+    public AppUser update(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
         return this;
     }
 }
