@@ -1,23 +1,23 @@
-package com.snopko.RestApi.security.logic.service;
+package com.snopko.RestApi.security.config.logic.facade;
 
 import com.snopko.RestApi.cars.logic.exception.NotFoundException;
+import com.snopko.RestApi.security.config.logic.dto.UserDto;
 import com.snopko.RestApi.security.dao.entity.AppUser;
 import com.snopko.RestApi.security.dao.repository.IUserRepository;
-import com.snopko.RestApi.security.logic.dto.AdminDtoCreate;
-import com.snopko.RestApi.security.logic.dto.UserDto;
+import com.snopko.RestApi.security.config.logic.dto.AdminDtoCreate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Service
+@Component
 @Transactional
-public class AdminService {
+public class AdminFacade {
     @Autowired
     private IUserRepository repository;
     @Autowired

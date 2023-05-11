@@ -1,4 +1,4 @@
-package com.snopko.RestApi.security.logic.dto;
+package com.snopko.RestApi.security.config.logic.dto;
 
 import com.snopko.RestApi.security.config.SecurityConstants;
 import lombok.Data;

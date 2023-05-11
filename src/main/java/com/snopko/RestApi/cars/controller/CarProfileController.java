@@ -2,7 +2,7 @@ package com.snopko.RestApi.cars.controller;
 
 import com.snopko.RestApi.cars.logic.dto.CarProfileDto;
 import com.snopko.RestApi.cars.logic.dto.CarProfileDtoCreate;
-import com.snopko.RestApi.cars.logic.service.CarProfileService;
+import com.snopko.RestApi.cars.logic.facade.CarProfileFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping(path = "/api/profiles")
 public class CarProfileController {
     @Autowired
-    private CarProfileService service;
+    private CarProfileFacade service;
 
     @GetMapping(path = "/count")
     public ResponseEntity<Long> count() {

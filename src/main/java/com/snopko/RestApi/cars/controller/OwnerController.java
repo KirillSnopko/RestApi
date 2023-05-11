@@ -3,7 +3,7 @@ package com.snopko.RestApi.cars.controller;
 import com.snopko.RestApi.cars.logic.dto.OwnerCreateDto;
 import com.snopko.RestApi.cars.logic.dto.OwnerDto;
 import com.snopko.RestApi.cars.logic.dto.OwnerDtoWithProfiles;
-import com.snopko.RestApi.cars.logic.service.OwnerService;
+import com.snopko.RestApi.cars.logic.facade.OwnerFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping(path = "/api/owners")
 public class OwnerController {
     @Autowired
-    private OwnerService service;
+    private OwnerFacade service;
 
     @GetMapping(path = "/count")
     public ResponseEntity<Long> count() {

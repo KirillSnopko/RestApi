@@ -1,9 +1,9 @@
 package com.snopko.RestApi.security.controller;
 
 import com.snopko.RestApi.security.config.SecurityConstants;
-import com.snopko.RestApi.security.logic.dto.LoginDto;
-import com.snopko.RestApi.security.logic.dto.UserDtoCreate;
-import com.snopko.RestApi.security.logic.service.UserService;
+import com.snopko.RestApi.security.config.logic.dto.LoginDto;
+import com.snopko.RestApi.security.config.logic.dto.UserDtoCreate;
+import com.snopko.RestApi.security.config.logic.facade.AccountFacade;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -25,7 +25,7 @@ public class AccountControllerTest {
     @LocalServerPort
     private Integer port;
     @Autowired
-    UserService service;
+    AccountFacade service;
     private final String host = "http://localhost";
     private final UserDtoCreate userDto = new UserDtoCreate("testUser", "password","test@gmail.com");
     private RequestSpecification specification;

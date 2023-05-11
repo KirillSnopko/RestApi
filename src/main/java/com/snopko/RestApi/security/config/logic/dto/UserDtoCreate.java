@@ -1,4 +1,4 @@
-package com.snopko.RestApi.security.logic.dto;
+package com.snopko.RestApi.security.config.logic.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +9,11 @@ import javax.validation.constraints.NotEmpty;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginDto {
+public class UserDtoCreate {
     @NotEmpty
     private String username;
     @NotEmpty
     private String password;
+    @NotEmpty
+    private String email;
 }

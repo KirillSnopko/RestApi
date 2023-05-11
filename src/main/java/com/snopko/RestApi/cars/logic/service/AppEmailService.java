@@ -21,6 +21,12 @@ public class AppEmailService {
     public JavaMailSender emailSender;
     private static final Logger LOG = LoggerFactory.getLogger(AppEmailService.class);
 
+    /**
+     * Just for tests
+     * Print message to log
+     *
+     * @return No return value
+     */
     public void sendTestEmail(String toAddress, String subject, String message) {
         LOG.info(MessageFormat.format("Email sending to {0}. Subject {1}. Message: {2}.", toAddress, subject, message));
     }

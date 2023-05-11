@@ -1,7 +1,7 @@
 package com.snopko.RestApi.security.config;
 
 import com.snopko.RestApi.security.dao.entity.AppRole;
-import com.snopko.RestApi.security.logic.service.UserDetailsServiceImpl;
+import com.snopko.RestApi.security.config.logic.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.snopko.RestApi.security.logic.service;
+package com.snopko.RestApi.security.config.logic.service;
 
 import com.snopko.RestApi.security.dao.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

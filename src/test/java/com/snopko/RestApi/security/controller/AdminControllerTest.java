@@ -2,9 +2,9 @@ package com.snopko.RestApi.security.controller;
 
 import com.snopko.RestApi.security.config.SecurityConstants;
 import com.snopko.RestApi.security.dao.entity.AppRole;
-import com.snopko.RestApi.security.logic.dto.AdminDtoCreate;
-import com.snopko.RestApi.security.logic.dto.LoginDto;
-import com.snopko.RestApi.security.logic.service.AdminService;
+import com.snopko.RestApi.security.config.logic.dto.AdminDtoCreate;
+import com.snopko.RestApi.security.config.logic.dto.LoginDto;
+import com.snopko.RestApi.security.config.logic.facade.AdminFacade;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -24,7 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AdminControllerTest {
     @Autowired
-    AdminService service;
+    AdminFacade service;
     @LocalServerPort
     private Integer port;
     private final String host = "http://localhost";
