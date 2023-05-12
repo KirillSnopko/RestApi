@@ -1,9 +1,9 @@
 package com.snopko.RestApi.security.controller;
 
 import com.snopko.RestApi.security.config.SecurityConstants;
-import com.snopko.RestApi.security.config.logic.dto.LoginDto;
-import com.snopko.RestApi.security.config.logic.dto.UserDtoCreate;
-import com.snopko.RestApi.security.config.logic.facade.AccountFacade;
+import com.snopko.RestApi.security.logic.dto.LoginDto;
+import com.snopko.RestApi.security.logic.dto.UserDtoCreate;
+import com.snopko.RestApi.security.logic.facade.AccountFacade;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -27,7 +27,8 @@ public class AccountControllerTest {
     @Autowired
     AccountFacade service;
     private final String host = "http://localhost";
-    private final UserDtoCreate userDto = new UserDtoCreate("testUser", "password","test@gmail.com");
+    private final UserDtoCreate userDto = new UserDtoCreate("testUser", "password", "test@gmail.com");
+    private final String NEW_NAME = "Kirill";
     private RequestSpecification specification;
 
     @BeforeAll
@@ -36,6 +37,9 @@ public class AccountControllerTest {
         RestAssured.port = port;
         if (service.existsByUsername(userDto.getUsername())) {
             service.deleteByUsername(userDto.getUsername());
+        }
+        if (service.existsByUsername(NEW_NAME)) {
+            service.deleteByUsername(NEW_NAME);
         }
     }
 
@@ -114,7 +118,7 @@ public class AccountControllerTest {
     @DisplayName("update user")
     public void update() {
         String currentName = userDto.getUsername();
-        userDto.setUsername("newUserName");
+        userDto.setUsername(NEW_NAME);
         ValidatableResponse vr = RestAssured.given(specification)
                 .with()
                 .body(userDto)
@@ -128,7 +132,7 @@ public class AccountControllerTest {
         String username = vr.extract().body().jsonPath().get("username");
         String token = vr.extract().body().jsonPath().get("accessToken");
 
-        Assertions.assertEquals(username, userDto.getUsername());
+        Assertions.assertEquals(username, NEW_NAME);
 
         specification = new RequestSpecBuilder()
                 .addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token)

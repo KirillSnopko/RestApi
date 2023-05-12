@@ -1,6 +1,7 @@
-package com.snopko.RestApi.security.config.logic.dto;
+package com.snopko.RestApi.security.logic.dto;
 
 import com.snopko.RestApi.security.dao.entity.AppRole;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +9,8 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotEmpty;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class AdminDtoCreate {
     @NotEmpty
     private String username;
@@ -19,5 +20,4 @@ public class AdminDtoCreate {
     private String email;
     @NotEmpty
     private AppRole role;
-
 }

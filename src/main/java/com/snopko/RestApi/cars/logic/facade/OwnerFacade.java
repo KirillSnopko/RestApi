@@ -43,7 +43,8 @@ public class OwnerFacade {
 
     public OwnerDto update(OwnerCreateDto dto, long id) {
         Owner owner = repository.findById(id).orElseThrow(() -> new NotFoundException("owner with id=" + id + " not found"));
-        Owner updated = repository.save(owner.update(mapper.map(dto, Owner.class)));
+        mapper.map(dto, owner);
+        Owner updated = repository.save(owner);
         return mapper.map(updated, OwnerDto.class);
     }
 

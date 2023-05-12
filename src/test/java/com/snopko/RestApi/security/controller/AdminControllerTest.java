@@ -2,9 +2,9 @@ package com.snopko.RestApi.security.controller;
 
 import com.snopko.RestApi.security.config.SecurityConstants;
 import com.snopko.RestApi.security.dao.entity.AppRole;
-import com.snopko.RestApi.security.config.logic.dto.AdminDtoCreate;
-import com.snopko.RestApi.security.config.logic.dto.LoginDto;
-import com.snopko.RestApi.security.config.logic.facade.AdminFacade;
+import com.snopko.RestApi.security.logic.dto.AdminDtoCreate;
+import com.snopko.RestApi.security.logic.dto.LoginDto;
+import com.snopko.RestApi.security.logic.facade.AdminFacade;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -103,6 +103,7 @@ public class AdminControllerTest {
     @Order(4)
     @DisplayName("update user")
     public void update() {
+        newAdmin.setRole(AppRole.USER);
         RestAssured.given(specification)
                 .with()
                 .body(newAdmin)

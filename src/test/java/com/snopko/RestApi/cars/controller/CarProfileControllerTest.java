@@ -4,7 +4,7 @@ import com.snopko.RestApi.cars.logic.dto.CarCreateDto;
 import com.snopko.RestApi.cars.logic.dto.CarProfileDtoCreate;
 import com.snopko.RestApi.cars.logic.dto.OwnerCreateDto;
 import com.snopko.RestApi.security.config.SecurityConstants;
-import com.snopko.RestApi.security.config.logic.dto.LoginDto;
+import com.snopko.RestApi.security.logic.dto.LoginDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;

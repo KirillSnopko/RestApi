@@ -42,7 +42,8 @@ public class CarFacade {
 
     public CarDto update(CarCreateDto dto, long id) {
         Car car = repository.findById(id).orElseThrow(() -> new NotFoundException("car with id=" + id + " not found"));
-        Car updated = repository.save(car.update(mapper.map(dto, Car.class)));
+        mapper.map(dto, car);
+        Car updated = repository.save(car);
         return mapper.map(updated, CarDto.class);
     }
 

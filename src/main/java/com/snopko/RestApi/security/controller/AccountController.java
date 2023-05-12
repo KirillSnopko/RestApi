@@ -1,9 +1,9 @@
 package com.snopko.RestApi.security.controller;
 
-import com.snopko.RestApi.security.config.logic.dto.AuthResponseDto;
-import com.snopko.RestApi.security.config.logic.dto.LoginDto;
-import com.snopko.RestApi.security.config.logic.dto.UserDtoCreate;
-import com.snopko.RestApi.security.config.logic.facade.AccountFacade;
+import com.snopko.RestApi.security.logic.dto.AuthResponseDto;
+import com.snopko.RestApi.security.logic.dto.LoginDto;
+import com.snopko.RestApi.security.logic.dto.UserDtoCreate;
+import com.snopko.RestApi.security.logic.facade.AccountFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

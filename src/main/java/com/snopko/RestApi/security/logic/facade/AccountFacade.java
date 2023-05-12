@@ -1,12 +1,13 @@
-package com.snopko.RestApi.security.config.logic.facade;
+package com.snopko.RestApi.security.logic.facade;
 
 import com.snopko.RestApi.cars.logic.exception.NotFoundException;
 import com.snopko.RestApi.security.config.JwtUtils;
-import com.snopko.RestApi.security.config.logic.dto.UserDtoCreate;
+import com.snopko.RestApi.security.logic.dto.UserDtoCreate;
 import com.snopko.RestApi.security.dao.entity.AppRole;
 import com.snopko.RestApi.security.dao.entity.AppUser;
 import com.snopko.RestApi.security.dao.repository.IUserRepository;
-import com.snopko.RestApi.security.config.logic.dto.AuthResponseDto;
+import com.snopko.RestApi.security.logic.dto.AuthResponseDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,8 @@ public class AccountFacade {
     private JwtUtils jwtUtils;
     @Autowired
     private PasswordEncoder encoder;
+    @Autowired
+    private ModelMapper mapper;
 
     public void register(UserDtoCreate user) {
         AppUser newUser = new AppUser(user.getUsername(), encoder.encode(user.getPassword()), user.getEmail(), AppRole.USER);
@@ -36,7 +39,8 @@ public class AccountFacade {
 
     public void update(String username, UserDtoCreate userDto) {
         AppUser user = repository.findByUsername(username).orElseThrow(() -> new NotFoundException("user not found"));
-        user.update(userDto.getUsername(), encoder.encode(userDto.getPassword()), userDto.getEmail());
+        mapper.map(userDto, user);
+        user.setPassword(encoder.encode(user.getPassword()));
         repository.save(user);
     }
 
