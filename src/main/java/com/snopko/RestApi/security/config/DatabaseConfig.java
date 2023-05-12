@@ -3,6 +3,8 @@ package com.snopko.RestApi.security.config;
 import com.snopko.RestApi.security.dao.entity.AppRole;
 import com.snopko.RestApi.security.dao.entity.AppUser;
 import com.snopko.RestApi.security.dao.repository.IUserRepository;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +39,16 @@ public class DatabaseConfig {
                 log.info("Preloading " + repository.save(admin));
             }
         };
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT)
+                .setFieldMatchingEnabled(true)
+                .setSkipNullEnabled(true);
+
+        return mapper;
     }
 }

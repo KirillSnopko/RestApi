@@ -1,8 +1,6 @@
 package com.snopko.RestApi.cars.dao.entity;
 
 
-//import jakarta.persistence.*;
-
 import lombok.Data;
 
 import javax.persistence.*;
@@ -32,17 +30,4 @@ public class Car {
     private Date yearOfProduction;
     private Date MOT;
     private Date insurance;
-
-    public Car update(Car car) {
-        bodyNumber = car.getBodyNumber();
-        brand = car.getBrand();
-        modal = car.getModal();
-        bodyType = car.getBodyType();
-        transmission = car.getTransmission();
-        fuelType = car.getFuelType();
-        yearOfProduction = car.getYearOfProduction();
-        MOT = car.getMOT();
-        insurance = car.getInsurance();
-        return this;
-    }
 }

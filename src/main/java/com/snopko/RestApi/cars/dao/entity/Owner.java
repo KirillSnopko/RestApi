@@ -5,7 +5,6 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.List;
 
-
 @Data
 @Entity
 public class Owner {
@@ -18,11 +17,4 @@ public class Owner {
     private String secondName;
     @OneToMany(targetEntity = CarProfile.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CarProfile> profiles;
-
-    public Owner update(Owner owner) {
-        firstName = owner.firstName;
-        secondName = owner.secondName;
-        profiles = owner.profiles;
-        return this;
-    }
 }

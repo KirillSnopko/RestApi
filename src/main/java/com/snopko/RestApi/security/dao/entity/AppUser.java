@@ -48,19 +48,4 @@ public class AppUser implements UserDetails {
         this.role = role;
         this.email = email;
     }
-
-    public AppUser update(String username, String password, String email, AppRole role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.email = email;
-        return this;
-    }
-
-    public AppUser update(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        return this;
-    }
 }

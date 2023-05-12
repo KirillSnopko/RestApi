@@ -2,7 +2,7 @@ package com.snopko.RestApi.security.controller;
 
 import com.snopko.RestApi.security.logic.dto.AdminDtoCreate;
 import com.snopko.RestApi.security.logic.dto.UserDto;
-import com.snopko.RestApi.security.logic.service.AdminService;
+import com.snopko.RestApi.security.logic.facade.AdminFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/admin")
 public class AdminController {
     @Autowired
-    private AdminService service;
+    private AdminFacade service;
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<UserDto> get(@PathVariable long id) {

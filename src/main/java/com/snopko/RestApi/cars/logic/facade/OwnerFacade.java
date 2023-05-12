@@ -1,4 +1,4 @@
-package com.snopko.RestApi.cars.logic.service;
+package com.snopko.RestApi.cars.logic.facade;
 
 import com.snopko.RestApi.cars.dao.entity.Owner;
 import com.snopko.RestApi.cars.dao.repository.IOwnerRepository;
@@ -8,14 +8,14 @@ import com.snopko.RestApi.cars.logic.exception.NotFoundException;
 import com.snopko.RestApi.cars.logic.dto.OwnerCreateDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Service
-public class OwnerService {
+@Component
+public class OwnerFacade {
     @Autowired
     private IOwnerRepository repository;
     @Autowired
@@ -43,7 +43,8 @@ public class OwnerService {
 
     public OwnerDto update(OwnerCreateDto dto, long id) {
         Owner owner = repository.findById(id).orElseThrow(() -> new NotFoundException("owner with id=" + id + " not found"));
-        Owner updated = repository.save(owner.update(mapper.map(dto, Owner.class)));
+        mapper.map(dto, owner);
+        Owner updated = repository.save(owner);
         return mapper.map(updated, OwnerDto.class);
     }
 

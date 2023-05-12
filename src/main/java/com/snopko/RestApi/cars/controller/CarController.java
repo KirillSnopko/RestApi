@@ -1,8 +1,8 @@
 package com.snopko.RestApi.cars.controller;
 
-import com.snopko.RestApi.cars.logic.CarFacade;
 import com.snopko.RestApi.cars.logic.dto.CarCreateDto;
 import com.snopko.RestApi.cars.logic.dto.CarDto;
+import com.snopko.RestApi.cars.logic.facade.CarFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

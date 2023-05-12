@@ -1,4 +1,4 @@
-package com.snopko.RestApi.cars.logic.service;
+package com.snopko.RestApi.cars.logic.facade;
 
 import com.snopko.RestApi.cars.dao.entity.Car;
 import com.snopko.RestApi.cars.dao.repository.ICarRepository;
@@ -7,14 +7,14 @@ import com.snopko.RestApi.cars.logic.dto.CarDto;
 import com.snopko.RestApi.cars.logic.exception.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Service
-public class CarService {
+@Component
+public class CarFacade {
     @Autowired
     private ICarRepository repository;
     @Autowired
@@ -42,7 +42,8 @@ public class CarService {
 
     public CarDto update(CarCreateDto dto, long id) {
         Car car = repository.findById(id).orElseThrow(() -> new NotFoundException("car with id=" + id + " not found"));
-        Car updated = repository.save(car.update(mapper.map(dto, Car.class)));
+        mapper.map(dto, car);
+        Car updated = repository.save(car);
         return mapper.map(updated, CarDto.class);
     }
 

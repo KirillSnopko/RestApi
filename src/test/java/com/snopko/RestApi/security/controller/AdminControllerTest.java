@@ -4,7 +4,7 @@ import com.snopko.RestApi.security.config.SecurityConstants;
 import com.snopko.RestApi.security.dao.entity.AppRole;
 import com.snopko.RestApi.security.logic.dto.AdminDtoCreate;
 import com.snopko.RestApi.security.logic.dto.LoginDto;
-import com.snopko.RestApi.security.logic.service.AdminService;
+import com.snopko.RestApi.security.logic.facade.AdminFacade;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
@@ -24,7 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AdminControllerTest {
     @Autowired
-    AdminService service;
+    AdminFacade service;
     @LocalServerPort
     private Integer port;
     private final String host = "http://localhost";
@@ -103,6 +103,7 @@ public class AdminControllerTest {
     @Order(4)
     @DisplayName("update user")
     public void update() {
+        newAdmin.setRole(AppRole.USER);
         RestAssured.given(specification)
                 .with()
                 .body(newAdmin)
